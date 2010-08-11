@@ -1,0 +1,125 @@
+#!/bin/bash
+
+#REGEX='*[0-9][Xx][0-9][0-9]*.avi'
+
+#for REGEX in $(cat ~/bin/regex.txt)
+#do
+#	echo 'REGEX '$REGEX
+#	for f in $REGEX
+#	do
+#		if [[ $f == $REGEX ]]
+#			then
+#			ext=$(echo $f | sed 's/'"\.avi$"'/&/')
+#			echo 'EXTENSION '$ext
+#			old=$f
+#			echo 'OLD '$old
+#			for w in $(cat ~/bin/sub.txt)
+#			do
+#				f=$(echo $f | sed 's/'"$w"'//g')
+#			done
+#			f=$(echo $f | sed s/[.\-]/" "/g)
+#			echo $f
+#		fi
+#	done
+#done
+
+#lynx -dump -nolist epguides.com/BattlestarGalactica | egrep
+# ^a-rt-zA-RT-Z0-9
+
+
+for file in *.*; do
+	MATCH="0"
+	if [[ $file == *[.\-_[:blank:]\[\]][0-9][Xx][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [0-9][Xx][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]\[\]][0-9][0-9][Xx][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [0-9][0-9][Xx][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]Ss\[\]][0-9][Ee][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [Ss][0-9][Ee][0-9][0-9])
+	elif [[ $file == *[^a-rt-zA-RT-Z0-9][0-9][0-9][Ee][0-9][0-9][^a-rt-zA-RT-Z0-9]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [Ss][0-9][0-9][Ee][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]Ss\[\]][0-9][Ee][Pp][0-9]-[0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [Ss][0-9][Ee][Pp][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]Ss\[\]][0-9][0-9][Ee][Pp][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [Ss][0-9][0-9][Ee][Pp][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]\[\]][0-9][-][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [0-9][-][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]\[\]][0-9][0-9][-][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [0-9][0-9][-][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]Ss\[\]][0-9][0-9][0-9][.\-_[:blank:]Ss\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [0-9][0-9][0-9])
+	elif [[ $file == *[.\-_[:blank:]\[\]][0-9][0-9][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
+		MATCH="1"
+		TEMP=$(echo "$file" | grep -o [0-9][0-9][0-9][0-9])
+	fi
+	if [ $MATCH == "1" ]; then
+		LENGTH=${#TEMP}
+		if [ $LENGTH == 3 ]; then
+			SEASON=${TEMP:0:1}
+			EPISODE=${TEMP:1:2}
+		elif [ $LENGTH == 4 ]; then
+			if [[ $TEMP == *[0-9][-][0-9]* ]]; then
+				SEASON=${TEMP:0:1}
+				EPISODE=${TEMP:2:2}
+			elif [[ $TEMP == *[0-9][Xx][0-9]* ]]; then
+				SEASON=${TEMP:0:1}
+				EPISODE=${TEMP:2:2}
+			else
+				SEASON=${TEMP:0:2}
+				EPISODE=${TEMP:2:2}
+				if [ ${SEASON:0:1} == 0 ]; then
+					SEASON=${SEASON:1}
+				fi
+			fi
+		elif [ $LENGTH == 5 ]; then
+			if [[ $TEMP == *[0-9][-][0-9]* ]]; then
+				SEASON=${TEMP:0:2}
+				EPISODE=${TEMP:3:2}
+				if [ ${SEASON:0:1} == 0 ]; then
+					SEASON=${SEASON:1}
+				fi
+			elif [[ $TEMP == *[0-9][Xx][0-9]* ]]; then
+				SEASON=${TEMP:0:2}
+				EPISODE=${TEMP:3:2}
+				if [ ${SEASON:0:1} == 0 ]; then
+					SEASON=${SEASON:1}
+				fi
+			elif [[ $TEMP == *[0-9][Ee][0-9]* ]]; then
+				SEASON=${TEMP:1:1}
+				EPISODE=${TEMP:3:2}
+			fi
+		elif [ $LENGTH == 6 ]; then
+			if [[ $TEMP == *[0-9][Ee][0-9]* ]]; then
+				SEASON=${TEMP:1:2}
+				EPISODE=${TEMP:4:2}
+				if [ ${SEASON:0:1} == 0 ]; then
+					SEASON=${SEASON:1}
+				fi
+			elif [[ $TEMP == *[0-9][Ee][Pp][0-9]* ]]; then
+				SEASON=${TEMP:1:1}
+				EPISODE=${TEMP:4:2}
+			fi
+		elif [ $LENGTH == 7]; then
+			if [[ $TEMP == *[0-9][Ee][Pp][0-9]* ]]; then
+				SEASON=${TEMP:1:2}
+				EPISODE=${TEMP:5:2}
+				if [ ${SEASON:0:1} == 0 ]; then
+					SEASON=${SEASON:1}
+				fi
+			fi
+		fi
+		EXT="${file##*.}"
+		echo "$file   >>>   $SEASON-$EPISODE.$EXT"
+		mv "$file" "$SEASON-$EPISODE.$EXT"
+	fi
+done
+
+# FILENAME="${file%.*}"

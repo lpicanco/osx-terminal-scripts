@@ -1,0 +1,13 @@
+#!/bin/bash
+
+dashstat=`defaults read com.apple.dashboard mcx-disabled`
+
+if [[ $dashstat == "0" ]]; then
+	defaults write com.apple.dashboard mcx-disabled -boolean YES
+	killall Dock
+	echo "Dashboard is now OFF."
+elif [[ $dashstat == "1" ]]; then
+	defaults write com.apple.dashboard mcx-disabled -boolean NO
+	killall Dock
+	echo "Dashboard is now ON."
+fi

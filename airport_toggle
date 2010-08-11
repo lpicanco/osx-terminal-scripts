@@ -1,0 +1,11 @@
+#!/bin/bash
+
+airstat=`networksetup -getairportpower Airport | awk '/Airport/ { print $4 }'`
+
+if [[ $airstat == "On" ]];
+	then networksetup -setairportpower Airport off
+	echo "airport is OFF"
+else
+	networksetup -setairportpower Airport on
+	echo "airport is ON"
+fi
