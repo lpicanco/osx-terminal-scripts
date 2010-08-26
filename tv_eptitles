@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ -z "$1" ]; then
 	echo "ERROR: No TV show was provided."
 	exit
@@ -7,6 +9,7 @@ TEMPINDEX=$(lynx -dump -nolist epguides.com/$1 | grep "Episode #")
 SEARCH="Titles"
 let INDEX=${#TEMPINDEX}-6
 
+# for seasons 1  to 9
 for file in [0-9]-[0-9][0-9].*; do
 	FILENAME="${file%.*}"
 	EXT="${file##*.}"
@@ -24,6 +27,7 @@ for file in [0-9]-[0-9][0-9].*; do
 	fi
 done
 
+# for seasons 10+
 for file in [0-9][0-9]-[0-9][0-9].*; do
 	FILENAME="${file%.*}"
 	EXT="${file##*.}"
@@ -32,6 +36,6 @@ for file in [0-9][0-9]-[0-9][0-9].*; do
 		TITLE=${OOGA:$INDEX}
 		TITLE=${TITLE//\ \[*\]/}
 		echo "$file   >>>   $FILENAME - $TITLE.$EXT"
-#		mv "$file" "$FILENAME - $TITLE.$EXT"
+		mv "$file" "$FILENAME - $TITLE.$EXT"
 	fi
 done

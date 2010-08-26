@@ -23,9 +23,6 @@
 #	done
 #done
 
-#lynx -dump -nolist epguides.com/BattlestarGalactica | egrep
-# ^a-rt-zA-RT-Z0-9
-
 
 for file in *.*; do
 	MATCH="0"
