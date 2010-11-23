@@ -1,13 +1,23 @@
 #!/bin/bash
 
+# match "#-##" to "#-## - "
+
+# check if show title was provided
+# if not, quit
 if [ -z "$1" ]; then
 	echo "ERROR: No TV show was provided."
 	exit
 fi
 
+# grab the source txt
 TEMPINDEX=$(lynx -dump -nolist epguides.com/$1 | grep "Episode #")
 SEARCH="Titles"
 let INDEX=${#TEMPINDEX}-6
+
+# need to work on epguides.com search for
+#	1-01 OR 1- 1
+#	"Episode Title" OR "Titles"
+# need to support double episode files, such as s01e02-03
 
 # For seasons 1  to 9
 for file in [0-9]-[0-9][0-9].*; do

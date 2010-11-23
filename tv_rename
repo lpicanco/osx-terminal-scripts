@@ -1,29 +1,5 @@
 #!/bin/bash
 
-#REGEX='*[0-9][Xx][0-9][0-9]*.avi'
-
-#for REGEX in $(cat ~/bin/regex.txt)
-#do
-#	echo 'REGEX '$REGEX
-#	for f in $REGEX
-#	do
-#		if [[ $f == $REGEX ]]
-#			then
-#			ext=$(echo $f | sed 's/'"\.avi$"'/&/')
-#			echo 'EXTENSION '$ext
-#			old=$f
-#			echo 'OLD '$old
-#			for w in $(cat ~/bin/sub.txt)
-#			do
-#				f=$(echo $f | sed 's/'"$w"'//g')
-#			done
-#			f=$(echo $f | sed s/[.\-]/" "/g)
-#			echo $f
-#		fi
-#	done
-#done
-
-
 for file in *.*; do
 	MATCH="0"
 	if [[ $file == *[.\-_[:blank:]\[\]][0-9][Xx][0-9][0-9][.\-_[:blank:]\[\]]* ]]; then
@@ -118,5 +94,3 @@ for file in *.*; do
 		mv "$file" "$SEASON-$EPISODE.$EXT"
 	fi
 done
-
-# FILENAME="${file%.*}"
